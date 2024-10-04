@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import requests
 import time
+import sqlite3
 
 # Your base URL and FIPS codes
 base_url = "https://api.census.gov/data/2022/acs/acsse"  # Adjust to the correct endpoint/year
@@ -61,3 +62,14 @@ df_all_data.replace('None', 0, inplace=True)
 for col in df_all_data.columns:
     if col.startswith('K') and (col.endswith('E') or col.endswith('M')):
         df_all_data[col] = pd.to_numeric(df_all_data[col], errors='coerce')
+
+# Save the DataFrame to a SQLite database
+# Connect to SQLite database (creates a new file if it doesn't exist)
+conn = sqlite3.connect('data_dictionary.db')
+
+# Save the DataFrame to a table in the database
+df_all_data.to_sql('census_data', conn, if_exists='replace', index=False)
+
+# Commit changes and close the connection
+conn.commit()
+conn.close()
