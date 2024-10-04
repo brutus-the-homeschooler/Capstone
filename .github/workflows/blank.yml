@@ -1,0 +1,27 @@
+name: Fetch Census Data and Save to SQLite
+
+on:
+  workflow_dispatch:  # Manual trigger; replace with 'schedule' or 'push' if needed
+
+jobs:
+  fetch-and-save-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install pandas requests
+
+      - name: Run data fetch and save to SQLite
+        env:
+          CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}  # Access the secret
+        run: |
+          python fetch_and_save.py
