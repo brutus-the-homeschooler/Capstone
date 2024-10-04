@@ -36,9 +36,15 @@ jobs:
       - name: List files in the workspace
         run: ls -la
 
-      - name: Push changes to the repository
+      - name: Pull latest changes from remote
         env:
           PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
           git remote set-url origin https://x-access-token:${PERSONAL_ACCESS_TOKEN}@github.com/brutus-the-homeschooler/Capstone.git
+          git pull origin main
+
+      - name: Push changes to the repository
+        env:
+          PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: |
           git push origin main
