@@ -10,14 +10,18 @@ place_fips = "22694"  # FIPS code for Dublin city, Ohio
 state_fips = "39"     # FIPS code for Ohio
 api_key = os.getenv('CENSUS_API_KEY')  # Get the Census API key from the environment variable
 
-# Load the CSV file
-url = "https://raw.githubusercontent.com/brutus-the-homeschooler/Capstone/main/variables.csv"
-variables_df = pd.read_csv(url)
+# URL for Variable Dictionary
+variable_dict_url = "https://raw.githubusercontent.com/brutus-the-homeschooler/Capstone/main/Dictionary/Variable Dictionary.csv"
+variable_dict_df = pd.read_csv(variable_dict_url)
 
-valid_variables = variables_df['Variable'].tolist()
-moe_variables = variables_df['MOE'].tolist()
-# Combine estimate and MOE variables in pairs
-full_variables = [var for pair in zip(valid_variables, moe_variables) for var in pair]
+# Extract variables and their corresponding MOE
+valid_variables = variable_dict_df['Variable_Name'].tolist()
+moe_variables = variable_dict_df['Measurement_of_error'].tolist()
+
+# Combine estimate and MOE variables in pairs, ignoring NaNs
+full_variables = [
+    var for var, moe in zip(valid_variables, moe_variables) if not pd.isna(moe) for var in (var, moe)
+]
 
 # Initialize a DataFrame to hold all combined data
 df_all_data = pd.DataFrame()
@@ -66,10 +70,28 @@ for col in df_all_data.columns:
 # Save the DataFrame to a SQLite database
 # Connect to SQLite database (creates a new file if it doesn't exist)
 conn = sqlite3.connect('data_dictionary.db')
-
-# Save the DataFrame to a table in the database
 df_all_data.to_sql('census_data', conn, if_exists='replace', index=False)
+conn.commit()
+conn.close()
 
-# Commit changes and close the connection
+### Adding Place Dictionary and State Dictionary ###
+
+# Path to CSV files
+place_dict_url = "https://raw.githubusercontent.com/brutus-the-homeschooler/Capstone/main/Dictionary/Place Dictionary.csv"
+state_dict_url = "https://raw.githubusercontent.com/brutus-the-homeschooler/Capstone/main/Dictionary/State Dictionary.csv"
+
+## 1. Load Place Dictionary and Save to place_dictionary.db
+place_dict_df = pd.read_csv(place_dict_url)
+
+conn = sqlite3.connect('place_dictionary.db')
+place_dict_df.to_sql('place_dictionary', conn, if_exists='replace', index=False)
+conn.commit()
+conn.close()
+
+## 2. Load State Dictionary and Save to state_dictionary.db
+state_dict_df = pd.read_csv(state_dict_url)
+
+conn = sqlite3.connect('state_dictionary.db')
+state_dict_df.to_sql('state_dictionary', conn, if_exists='replace', index=False)
 conn.commit()
 conn.close()
