@@ -1,7 +1,7 @@
 name: Fetch Census Data and Save to SQLite
 
 on:
-  workflow_dispatch:  # Manual trigger; replace with 'schedule' or 'push' if needed
+  workflow_dispatch:  # Manual trigger; change as needed
 
 jobs:
   fetch-and-save-data:
@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
+        
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -25,3 +25,15 @@ jobs:
           CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}  # Access the secret
         run: |
           python fetch_and_save.py
+
+      - name: Add and commit the .db file
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add data_dictionary.db
+          git commit -m "Add SQLite database"
+
+      - name: Push changes to the repository
+        run: git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
