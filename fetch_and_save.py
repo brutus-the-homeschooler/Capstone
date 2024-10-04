@@ -11,7 +11,7 @@ state_fips = "39"     # FIPS code for Ohio
 api_key = os.getenv('CENSUS_API_KEY')  # Get the Census API key from the environment variable
 
 # URL for Variable Dictionary
-variable_dict_url = "https://raw.githubusercontent.com/brutus-the-homeschooler/Capstone/main/Dictionary/Variable Dictionary.csv"
+variable_dict_url = "https://raw.githubusercontent.com/brutus-the-homeschooler/Capstone/main/Dictionary/Variable%20Dictionary.csv"
 variable_dict_df = pd.read_csv(variable_dict_url)
 
 # Extract variables and their corresponding MOE
@@ -77,8 +77,8 @@ conn.close()
 ### Adding Place Dictionary and State Dictionary ###
 
 # Path to CSV files
-place_dict_url = "https://raw.githubusercontent.com/brutus-the-homeschooler/Capstone/main/Dictionary/Place Dictionary.csv"
-state_dict_url = "https://raw.githubusercontent.com/brutus-the-homeschooler/Capstone/main/Dictionary/State Dictionary.csv"
+place_dict_url = "https://raw.githubusercontent.com/brutus-the-homeschooler/Capstone/main/Dictionary/Place%20Dictionary.csv"
+state_dict_url = "https://raw.githubusercontent.com/brutus-the-homeschooler/Capstone/main/Dictionary/State%20Dictionary.csv"
 
 ## 1. Load Place Dictionary and Save to place_dictionary.db
 place_dict_df = pd.read_csv(place_dict_url)
