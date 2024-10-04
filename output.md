@@ -1,28 +1,28 @@
 # Data Dictionary
 
 <details>
-<summary>Directions</summary>
-
-
-
-</details>
-
-<details>
 <summary>Methodology</summary>
 
-| The following sheets contain the data dictionary for the 2022 American Community Survey (ACS) 1-Year Supplemental Estimates. The bulk of the Variable Dictionary is based on the 2022 table shell (linked below).                                                                                           |
-|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| nan                                                                                                                                                                                                                                                                                                         |
-| The Variable Dictionary includes all current variables and their associated measurements of error from the 2023 survey. It also provides the minimum, maximum, mean, median, and count of missing values. Note that within the actual database, all values are strings, and "None" is used in place of "0." |
-| nan                                                                                                                                                                                                                                                                                                         |
-| The Place Dictionary provides an unduplicated list of names (string), place (integer), and state (integer) entries. The "Name" has been split into "City Name" (string) and "State Name" (string) for clarity.                                                                                              |
-| nan                                                                                                                                                                                                                                                                                                         |
-| The State Dictionary contains an unduplicated list of state names (derived from the "Name" column in the Place Dictionary) alongside their corresponding state (integer) values.                                                                                                                            |
-| nan                                                                                                                                                                                                                                                                                                         |
-| Sources                                                                                                                                                                                                                                                                                                     |
-| American Community Survey 2022 Table Shell                                                                                                                                                                                                                                                                  |
+The following sections provide the data dictionary for the **2022 American Community Survey (ACS) 1-Year Supplemental Estimates**. The bulk of the Variable Dictionary is based on the 2022 table shell (linked below).
+
+### Variable Dictionary
+- Contains all current variables and their associated measurements of error from the 2023 survey.
+- Includes statistics such as minimum, maximum, mean, median, and count of missing values.
+- Note: All values in the actual database are strings, with `"None"` used in place of `"0"`.
+
+### Place Dictionary
+- Provides an unduplicated list of place names, place (integer), and state (integer) entries.
+- "Name" is split into "City Name" (string) and "State Name" (string) for clarity.
+
+### State Dictionary
+- Contains an unduplicated list of state names derived from the "Name" column in the Place Dictionary.
+- Each state name is accompanied by its corresponding state (integer) value.
+
+### Sources
+- [American Community Survey 2022 Table Shell](https://www.census.gov/programs-surveys/acs/technical-documentation/table-shells.2022.html#list-tab-79594641)
 
 </details>
+
 
 <details>
 <summary>Variable Dictionary</summary>
