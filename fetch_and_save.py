@@ -53,7 +53,7 @@ for i in range(0, len(full_variables), 44):
         df_all_data = pd.merge(df_all_data, df_chunk, on=['state', 'place'], how='outer')
 
     # Delay before the next request to avoid rate limiting
-    time.sleep(30)
+    time.sleep(15)
 
 # Replace 'None' with 0 in the entire DataFrame
 df_all_data.replace('None', 0, inplace=True)
