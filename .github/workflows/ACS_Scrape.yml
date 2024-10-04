@@ -20,18 +20,28 @@ jobs:
         run: |
           pip install pandas requests
 
-      # Create the Database directory if it doesn't exist and move the .db file
-      - name: Move SQLite file to Capstone/Database
+      - name: Run data fetch and save to SQLite
+        env:
+          CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
         run: |
-          mkdir -p Capstone/Database  # Create the directory if it doesn't exist
-          mv data_dictionary.db Capstone/Database/data_dictionary.db
+          python fetch_and_save.py  # Assuming fetch_and_save.py is your updated script
 
-      - name: Add and commit the .db file
+      # Create the Database directory if it doesn't exist
+      - name: Create Database Directory
+        run: |
+          mkdir -p Capstone/Database
+
+      # Move all .db files to the Database directory
+      - name: Move all SQLite files to Capstone/Database
+        run: |
+          mv *.db Capstone/Database/
+
+      - name: Add and commit the .db files
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git add Capstone/Database/data_dictionary.db
-          git commit -m "Add SQLite database to Capstone/Database"
+          git add Capstone/Database/*.db
+          git commit -m "Add SQLite databases to Capstone/Database"
           
       - name: List files in the workspace
         run: ls -la Capstone/Database
