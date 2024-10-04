@@ -1,7 +1,7 @@
 name: Fetch Census Data and Save to SQLite
 
 on:
-  workflow_dispatch:  # Manual trigger; change as needed
+  workflow_dispatch:  # Manual trigger; replace with 'schedule' or 'push' as needed
 
 jobs:
   fetch-and-save-data:
@@ -34,6 +34,5 @@ jobs:
           git commit -m "Add SQLite database"
 
       - name: Push changes to the repository
-        run: git push origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git push https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/brutus-the-homeschooler/Capstone.git main
