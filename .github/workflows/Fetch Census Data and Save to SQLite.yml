@@ -34,5 +34,9 @@ jobs:
           git commit -m "Add SQLite database"
 
       - name: Push changes to the repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
-          git push https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/brutus-the-homeschooler/Capstone.git main
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/brutus-the-homeschooler/Capstone.git
+          git push origin main
+
