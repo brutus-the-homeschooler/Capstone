@@ -1,7 +1,7 @@
 name: Fetch Census Data and Save to SQLite
 
 on:
-  workflow_dispatch:  # Manual trigger; replace with 'schedule' or 'push' as needed
+  workflow_dispatch:  # Manual trigger; change as needed
 
 jobs:
   fetch-and-save-data:
@@ -18,11 +18,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pandas requests
+          pip install pandas requests sqlite3
 
       - name: Run data fetch and save to SQLite
         env:
-          CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}  # Access the secret
+          CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
         run: |
           python fetch_and_save.py
 
@@ -32,6 +32,9 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git add data_dictionary.db
           git commit -m "Add SQLite database"
+          
+      - name: List files in the workspace
+        run: ls -la
 
       - name: Push changes to the repository
         env:
@@ -39,4 +42,3 @@ jobs:
         run: |
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/brutus-the-homeschooler/Capstone.git
           git push origin main
-
