@@ -29,22 +29,22 @@ jobs:
       # Create the Database directory if it doesn't exist
       - name: Create Database Directory
         run: |
-          mkdir -p Capstone/Database
+          mkdir -p Database
 
       # Move all .db files to the Database directory
       - name: Move all SQLite files to Capstone/Database
         run: |
-          mv *.db Capstone/Database/
+          mv *.db Database/
 
       - name: Add and commit the .db files
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git add Capstone/Database/*.db
-          git commit -m "Add SQLite databases to Capstone/Database"
+          git add Database/*.db
+          git commit -m "Add SQLite databases to Database"
           
       - name: List files in the workspace
-        run: ls -la Capstone/Database
+        run: ls -la Database
 
       - name: Pull latest changes from remote
         env:
