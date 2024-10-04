@@ -18,7 +18,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pandas requests sqlite3
+          pip install pandas requests
 
       - name: Run data fetch and save to SQLite
         env:
