@@ -69,10 +69,8 @@ for col in df_all_data.columns:
 
 # Save the DataFrame to a SQLite database
 # Connect to SQLite database (creates a new file if it doesn't exist)
-conn = sqlite3.connect('data_dictionary.db')
+conn = sqlite3.connect('acsse_2022.db')
 df_all_data.to_sql('census_data', conn, if_exists='replace', index=False)
-conn.commit()
-conn.close()
 
 ### Adding Place Dictionary and State Dictionary ###
 
@@ -82,16 +80,11 @@ state_dict_url = "https://raw.githubusercontent.com/brutus-the-homeschooler/Caps
 
 ## 1. Load Place Dictionary and Save to place_dictionary.db
 place_dict_df = pd.read_csv(place_dict_url)
-
-conn = sqlite3.connect('place_dictionary.db')
 place_dict_df.to_sql('place_dictionary', conn, if_exists='replace', index=False)
-conn.commit()
-conn.close()
 
 ## 2. Load State Dictionary and Save to state_dictionary.db
 state_dict_df = pd.read_csv(state_dict_url)
-
-conn = sqlite3.connect('state_dictionary.db')
 state_dict_df.to_sql('state_dictionary', conn, if_exists='replace', index=False)
+
 conn.commit()
 conn.close()
