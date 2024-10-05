@@ -19,21 +19,20 @@ This project automates the process of collecting, processing, and analyzing data
 |-- Database/
 |    |-- acsse_2022.db  # SQLite database file containing three tables
 |    |-- README.md  # Information about the database and its usage
-|    |-- Dictionary/
-|         |-- Place Dictionary.csv  # Place-related metadata
-|         |-- State Dictionary.csv  # State-related metadata
-|         |-- Variable Dictionary.csv  # Metadata for ACS variables
-|         |-- README.md  # Information about the dictionaries and CSV files
+|-- Dictionary/
+|    |-- Place Dictionary.csv  # Place-related metadata
+|    |-- State Dictionary.csv  # State-related metadata
+|    |-- Variable Dictionary.csv  # Metadata for ACS variables
+|    |-- README.md  # Information about the dictionaries and CSV files
 |
 |-- Scripts/
 |    |-- fetch_and_save.py  # Python script to fetch ACS data and save to SQLite
 |
 |-- Data/
-|    |-- raw_data.csv  # Raw data (if applicable)
-|    |-- processed_data.csv  # Processed data (if applicable)
+|   
 |
-|-- variables.csv  # List of variables to query from the ACS API
-|-- City of Dublin American Community Survey Dictionary.xlsx  # Additional data or documentation
+|-- variables.csv  # List of variables to query from the ACS API WILL BE DEPRECATED
+|-- City of Dublin American Community Survey Dictionary.xlsx  # Additional data or documentation File contains all dictionaries and methodology for variables
 ```
 
 ## How to Use
