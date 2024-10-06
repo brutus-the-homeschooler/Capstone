@@ -30,7 +30,7 @@ This project automates the process of collecting, processing, and analyzing data
 |    |-- State Dictionary.csv  # State-related metadata
 |    |-- Variable Dictionary.csv  # Metadata for ACS variables
 |    |-- README.md  # Information about the dictionaries and CSV files
-|    |-- Archive
+|    |-- Archive/
 |      |-- variables.csv  # List of variables to query from the ACS API WILL BE DEPRECATED
 |      |-- City of Dublin American Community Survey Dictionary.xlsx  # Additional data or documentation File contains all dictionaries and methodology for variables
 |-- Scripts/
