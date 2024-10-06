@@ -35,11 +35,9 @@ This project automates the process of collecting, processing, and analyzing data
 |      |-- City of Dublin American Community Survey Dictionary.xlsx  # Additional data or documentation File contains all dictionaries and methodology for variables
 |-- Scripts/
 |    |-- acs_data_to_sqlite.py  # Python script to fetch ACS data and save to SQLite
-|
-|   
-|
-|-- variables.csv  # List of variables to query from the ACS API WILL BE DEPRECATED
-|-- City of Dublin American Community Survey Dictionary.xlsx  # Additional data or documentation File contains all dictionaries and methodology for variables
+|    |-- Sample/
+|        |-- contains .ipynb, .py, and .r files to show how to connect to acsse2022.db
+
 ```
 
 ## How to Use
