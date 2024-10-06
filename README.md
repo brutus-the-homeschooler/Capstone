@@ -1,6 +1,6 @@
 ## Data Refresh Status
 
-![Fetch Census Data and Save to SQLite](https://github.com/brutus-the-homeschooler/Capstone/actions/workflows/ACS_Scrape.yml/badge.svg)]
+![Fetch Census Data and Save to SQLite](https://github.com/brutus-the-homeschooler/Capstone/actions/workflows/ACS_Scrape.yml/badge.svg)
 
 **Note**: The data was last updated based on the most recent successful workflow run.
 
