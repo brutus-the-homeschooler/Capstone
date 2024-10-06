@@ -13,7 +13,7 @@ This project automates the process of collecting, processing, and analyzing data
 - **`place_dictionary`**: Maps place names to their corresponding FIPS codes.
 - **`state_dictionary`**: Maps state names to their corresponding FIPS codes.
 - **`variable_dictionary`**: Maps variable codes to actual names and family.
-- 
+
 ## Project Structure
 
 ```
