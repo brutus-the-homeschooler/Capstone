@@ -75,16 +75,26 @@ df_all_data.to_sql('census_data', conn, if_exists='replace', index=False)
 ### Adding Place Dictionary and State Dictionary ###
 
 # Path to CSV files
+# Path to CSV files
 place_dict_url = "https://raw.githubusercontent.com/brutus-the-homeschooler/Capstone/main/Dictionary/Place%20Dictionary.csv"
 state_dict_url = "https://raw.githubusercontent.com/brutus-the-homeschooler/Capstone/main/Dictionary/State%20Dictionary.csv"
 
 ## 1. Load Place Dictionary and Save to place_dictionary.db
 place_dict_df = pd.read_csv(place_dict_url)
-place_dict_df.to_sql('place_dictionary', conn, if_exists='replace', index=False)
 
+# Add zero-filling to 'place' and 'state' columns
+place_dict_df['place'] = place_dict_df['place'].astype(str).str.zfill(5)
+place_dict_df['state'] = place_dict_df['state'].astype(str).str.zfill(2)
+
+# Save to the SQLite database
+place_dict_df.to_sql('place_dictionary', conn, if_exists='replace', index=False)
 ## 2. Load State Dictionary and Save to state_dictionary.db
 state_dict_df = pd.read_csv(state_dict_url)
-state_dict_df.to_sql('state_dictionary', conn, if_exists='replace', index=False)
 
+# Add zero-filling to 'state' column
+state_dict_df['state'] = state_dict_df['state'].astype(str).str.zfill(2)
+
+# Save to the SQLite database
+state_dict_df.to_sql('state_dictionary', conn, if_exists='replace', index=False)
 conn.commit()
 conn.close()
