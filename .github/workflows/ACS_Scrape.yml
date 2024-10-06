@@ -24,7 +24,7 @@ jobs:
         env:
           CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
         run: |
-          python fetch_and_save.py  # Assuming fetch_and_save.py is your updated script
+          python Capstone/Scripts/acs_data_to_sqlite.py
 
       # Create the Database directory if it doesn't exist
       - name: Create Database Directory
