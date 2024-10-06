@@ -1,7 +1,6 @@
 ## Data Refresh Status
 
-![Fetch Census Data and Save to SQLite](https://github.com/brutus-the-homeschooler/Capstone/actions/workflows/ACS_Scrape.yml/badge.svg)](https://github.com/brutus-the-homeschooler/Capstone/actions/workflows/ACS_Scrape.yml)
-
+![Fetch Census Data and Save to SQLite](https://github.com/brutus-the-homeschooler/Capstone/actions/workflows/ACS_Scrape.yml/badge.svg)]
 **Note**: The data was last updated based on the most recent successful workflow run.
 
 # American Community Survey (ACS) Data Processing and Analysis Project
