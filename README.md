@@ -7,12 +7,13 @@
 # American Community Survey (ACS) Data Processing and Analysis Project
 
 ## Overview
-This project automates the process of collecting, processing, and analyzing data from the [American Community Survey](https://www.census.gov/programs-surveys/acs/data/summary-file.html) (ACS) 1-Year Supplemental Estimates for 2022. The processed data is stored in a structured format within a SQLite database, organized into three primary tables:
+This project automates the process of collecting, processing, and analyzing data from the [American Community Survey](https://www.census.gov/programs-surveys/acs/data/summary-file.html) (ACS) 1-Year Supplemental Estimates for 2022. The processed data is stored in a structured format within a SQLite database, organized into four primary tables:
 
 - **`census_data`**: Contains ACS variables and measurements of error for various geographic locations.
 - **`place_dictionary`**: Maps place names to their corresponding FIPS codes.
 - **`state_dictionary`**: Maps state names to their corresponding FIPS codes.
-
+- **`variable_dictionary`**: Maps variable codes to actual names and family.
+- 
 ## Project Structure
 
 ```
@@ -29,11 +30,12 @@ This project automates the process of collecting, processing, and analyzing data
 |    |-- State Dictionary.csv  # State-related metadata
 |    |-- Variable Dictionary.csv  # Metadata for ACS variables
 |    |-- README.md  # Information about the dictionaries and CSV files
-|
+|    |-- Archive
+|      |-- variables.csv  # List of variables to query from the ACS API WILL BE DEPRECATED
+|      |-- City of Dublin American Community Survey Dictionary.xlsx  # Additional data or documentation File contains all dictionaries and methodology for variables
 |-- Scripts/
-|    |-- fetch_and_save.py  # Python script to fetch ACS data and save to SQLite
+|    |-- acs_data_to_sqlite.py  # Python script to fetch ACS data and save to SQLite
 |
-|-- Data/
 |   
 |
 |-- variables.csv  # List of variables to query from the ACS API WILL BE DEPRECATED
@@ -52,41 +54,93 @@ The data processing workflow is automated using a GitHub Actions workflow (`ACS_
 To manually trigger the workflow or view its status, go to the "Actions" tab of this repository.
 
 ### 2. Connecting to the SQLite Database
-The main SQLite database (`acsse_2022.db`) contains three tables: `census_data`, `place_dictionary`, and `state_dictionary`. You can connect to and query these tables using Python or R.
+The main SQLite database (`acsse_2022.db`) contains four tables: `census_data`, `place_dictionary`, `state_dictionary`, `variable_dictionary`. You can connect to and query these tables using Python or R.
 
 **Python Example**
 
 ```python
+import requests
 import sqlite3
 import pandas as pd
 
-# Connect to the SQLite database
-conn = sqlite3.connect('Database/acsse_2022.db')
+# URL of the .db file hosted on GitHub
+db_url = "https://raw.githubusercontent.com/brutus-the-homeschooler/Capstone/main/Database/acsse_2022.db"
 
-# Query a table
+# Download the .db file
+response = requests.get(db_url)
+
+# Save the .db file locally
+with open("acsse_2022.db", "wb") as db_file:
+    db_file.write(response.content)
+
+# Connect to the SQLite database
+conn = sqlite3.connect('acsse_2022.db')
+
+# Query the 'census_data' table
 census_data_df = pd.read_sql_query("SELECT * FROM census_data", conn)
+
+# Query the 'place_dictionary' table
+place_dict_df = pd.read_sql_query("SELECT * FROM place_dictionary", conn)
+
+# Query the 'state_dictionary' table
+state_dict_df = pd.read_sql_query("SELECT * FROM state_dictionary", conn)
+
+# Query the 'variable_dictionary' table
+variable_dict_df = pd.read_sql_query("SELECT * FROM variable_dictionary", conn)
 
 # Close the connection
 conn.close()
+
+# Display data (optional)
+print(census_data_df.head())
+print(place_dict_df.head())
+print(state_dict_df.head())
+print(variable_dict_df.head())
 ```
 
 **R Example**
 
 ```r
-install.packages("DBI")
-install.packages("RSQLite")
+# Install necessary libraries
+#install.packages(c("RSQLite", "httr", "DBI"))
 
-library(DBI)
-library(RSQLite)
+# Load necessary libraries
+library(httr)     # For downloading the .db file
+library(DBI)      # For interacting with the SQLite database
+library(RSQLite)  # For SQLite-specific functionality
+
+# URL of the .db file hosted on GitHub
+db_url <- "https://raw.githubusercontent.com/brutus-the-homeschooler/Capstone/main/Database/acsse_2022.db"
+
+# Path to save the downloaded .db file
+db_file <- "acsse_2022.db"
+
+# Download the .db file
+GET(db_url, write_disk(db_file, overwrite = TRUE))
 
 # Connect to the SQLite database
-con <- dbConnect(RSQLite::SQLite(), "Database/acsse_2022.db")
+conn <- dbConnect(RSQLite::SQLite(), dbname = db_file)
 
-# Query a table
-census_data_df <- dbReadTable(con, "census_data")
+# Query the 'census_data' table
+census_data_df <- dbReadTable(conn, "census_data")
+
+# Query the 'place_dictionary' table
+place_dict_df <- dbReadTable(conn, "place_dictionary")
+
+# Query the 'state_dictionary' table
+state_dict_df <- dbReadTable(conn, "state_dictionary")
+
+# Query the 'variable_dictionary' table
+variable_dict_df <- dbReadTable(conn, "variable_dictionary")
 
 # Close the connection
-dbDisconnect(con)
+dbDisconnect(conn)
+
+# Display data (optional)
+head(census_data_df)
+head(place_dict_df)
+head(state_dict_df)
+head(variable_dict_df)
 ```
 
 ## Getting Started
@@ -112,8 +166,8 @@ pip install pandas requests
 ### ACS API Data
 The `census_data` table is generated by querying the ACS API for variables specified in `Variable Dictionary.csv`. Each variable has its corresponding Measurement of Error (MOE) included.
 
-### Place and State Dictionaries
-The `place_dictionary` and `state_dictionary` tables are derived from CSV files in the `Database/Dictionary/` folder, providing additional metadata for places and states, such as FIPS codes and names.
+### Place, State and Variable Dictionaries
+The `place_dictionary`, `state_dictionary` and `variable_dictionary` tables are derived from CSV files in the `Database/Dictionary/` folder, providing additional metadata for places and states and variables, such as FIPS codes and names.
 
 ## Folder Structure Details
 
@@ -125,9 +179,6 @@ The `place_dictionary` and `state_dictionary` tables are derived from CSV files 
 
 - **`Scripts/`**  
   Contains Python scripts used to fetch and process data from the ACS API.
-
-- **`Data/`**  
-  Stores raw and processed data files. This folder can be used for staging data before loading it into the database.
 
 ## Contributing
 
