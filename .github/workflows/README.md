@@ -11,7 +11,7 @@ This folder contains configuration files for GitHub Actions, which automate vari
 - **Tasks Performed**:
   - Checks out the code from the repository.
   - Sets up the Python environment.
-  - Runs the data-fetching script (`fetch_and_save.py`).
+  - Runs the data-fetching script (`acs_data_to_sqlite.py`).
   - Saves the output to a database file (`acsse_2022.db`).
   - Commits and pushes the database back to the repository.
 
@@ -21,7 +21,7 @@ This folder contains configuration files for GitHub Actions, which automate vari
 
 ## Requirements
 - **Secrets & Environment Variables**: Ensure that necessary secrets like `CENSUS_API_KEY` and `PERSONAL_ACCESS_TOKEN` are set up in the repository settings under "Secrets and variables."
-- **Python Dependencies**: The workflow installs dependencies specified in `fetch_and_save.py`, such as `pandas` and `requests`.
+- **Python Dependencies**: The workflow installs dependencies specified in `acs_data_to_sqlite.py`, such as `pandas` and `requests`.
 
 ## Notes
 - If you need to modify any automation steps, make changes to the corresponding `.yml` file in this folder.
