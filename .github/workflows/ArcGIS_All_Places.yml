@@ -21,7 +21,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install pygris geopandas requests sqlite3 pandas
+        pip install pygris geopandas requests pandas
 
     - name: Run ArcGIS All Places script
       run: python Capstone/Scripts/EDA/arcgis_all_places.py
