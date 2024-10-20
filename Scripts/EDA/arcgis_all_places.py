@@ -1,5 +1,5 @@
-# Install necessary packages
-!pip install pygris geopandas
+# Install necessary packages (comment this out if running via GitHub Actions)
+# !pip install pygris geopandas
 
 # Import required libraries
 import requests
@@ -7,6 +7,7 @@ import sqlite3
 import pandas as pd
 import geopandas as gpd
 from pygris import places
+import os
 
 # URL of the SQLite database hosted on GitHub
 db_url = "https://raw.githubusercontent.com/brutus-the-homeschooler/Capstone/main/Database/acsse_2022.db"
@@ -42,11 +43,20 @@ for state_fips in place_dict_df['state'].unique():
     # Append filtered places to the full GeoDataFrame
     all_places_gdf = pd.concat([all_places_gdf, filtered_places_gdf], ignore_index=True)
 
+# Define the output folder
+output_folder = 'Capstone/ArcGIS'
+
+# Create the folder if it doesn't exist
+os.makedirs(output_folder, exist_ok=True)
+
 # Output as CSV (without geometry)
-all_places_gdf.drop(columns='geometry').to_csv('2022_ACS_All_Places.csv', index=False)
+csv_path = os.path.join(output_folder, '2022_ACS_All_Places.csv')
+all_places_gdf.drop(columns='geometry').to_csv(csv_path, index=False)
 
 # Output as GeoJSON (includes geometry)
-all_places_gdf.to_file('2022_ACS_All_Places.geojson', driver='GeoJSON')
+geojson_path = os.path.join(output_folder, '2022_ACS_All_Places.geojson')
+all_places_gdf.to_file(geojson_path, driver='GeoJSON')
 
-# Output as Shapefile
-all_places_gdf.to_file('2022_ACS_All_Places.shp')
+# Output as Shapefile (Shapefiles create multiple files, so just specify the directory)
+shapefile_dir = os.path.join(output_folder, '2022_ACS_All_Places_Shapefile')
+all_places_gdf.to_file(shapefile_dir, driver='ESRI Shapefile')
