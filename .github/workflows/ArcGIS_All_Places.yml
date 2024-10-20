@@ -11,23 +11,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          pip install pygris geopandas requests pandas
 
-    - name: Install dependencies
-      run: |
-        pip install pygris geopandas requests pandas
+      - name: Run ArcGIS All Places script
+        run: python Scripts/EDA/arcgis_all_places.py
 
-    - name: Run ArcGIS All Places script
-      run: python Scripts/EDA/arcgis_all_places.py
+      - name: Upload output files
+        uses: actions/upload-artifact@v3
+        with:
+          name: output-files
+          path: ArcGIS/
 
-    - name: Upload output files
-      uses: actions/upload-artifact@v3
-      with:
-        name: output-files
-        path: Capstone/ArcGIS/
+      # New step: Commit and push files to GitHub repository
+      - name: Commit and push output files
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add ArcGIS/*
+          git commit -m "Add generated output files"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub's token to authenticate push
