@@ -44,7 +44,7 @@ for state_fips in place_dict_df['state'].unique():
     all_places_gdf = pd.concat([all_places_gdf, filtered_places_gdf], ignore_index=True)
 
 # Define the output folder
-output_folder = 'Capstone/ArcGIS'
+output_folder = 'ArcGIS/'
 
 # Create the folder if it doesn't exist
 os.makedirs(output_folder, exist_ok=True)
