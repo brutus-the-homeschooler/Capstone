@@ -24,10 +24,10 @@ jobs:
         pip install pygris geopandas requests pandas
 
     - name: Run ArcGIS All Places script
-      run: python Capstone/Scripts/EDA/arcgis_all_places.py
+      run: python Scripts/EDA/arcgis_all_places.py
 
     - name: Upload output files
       uses: actions/upload-artifact@v3
       with:
         name: output-files
-        path: Capstone/ArcGIS/
+        path: ArcGIS/
