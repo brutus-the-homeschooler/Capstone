@@ -178,6 +178,10 @@ The `place_dictionary`, `state_dictionary` and `variable_dictionary` tables are 
 - **`Scripts/`**  
   Contains Python scripts used to fetch and process data from the ACS API.
 
+## Exploratory Data Analysis with StoryMap
+
+You can view the StoryMap created in ARCGis [here](https://storymaps.arcgis.com/stories/329f10f1c2064be987c463b079d29b16).
+
 ## Contributing
 
 Contributions are welcome! Please follow these steps:
