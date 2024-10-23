@@ -20,7 +20,28 @@ This project automates the process of collecting, processing, and analyzing data
 /
 |-- .github/
 |    |-- workflows/
-|         |-- ACS_Scrape.yml  # GitHub Actions workflow file
+|         |-- ACS_Scrape.yml  # Workflow file that creates sqlite db of dictionaries and ACS 2022 data
+|         |-- ArcGIS_All_Places.yml  # Workflow file to create ArcGIS shapefiles, geojson, csv for mapping all locations
+|
+|-- ArcGIS/
+|    |-- 2022 ACS Subset/  # Contains shapefiles, geojson and csv for 541 subset based on 19 variables as detailed in StoryMap
+|        |-- 2022 ACS Subset Shapefile/
+|            |-- 2022_ACS_All_Places_Subset.cpg
+|            |-- 2022_ACS_All_Places_Subset.dbf
+|            |-- 2022_ACS_All_Places_Subset.prj
+|            |-- 2022_ACS_All_Places_Subset.shp
+|            |-- 2022_ACS_All_Places_Subset.shx
+|        |-- 2022_ACS_All_Places_Subset.csv
+|        |-- 2022_ACS_All_Places_Subset.geojson
+|    |-- 2022_ACS_All_Places_Shapefile/ # Contains shapefiles, geojson and csv for all places within the 2022 American Community Supplemental Survey
+|        |--2022_ACS_All_Places_Shapefile.cpg
+|        |--2022_ACS_All_Places_Shapefile.dbf
+|        |--2022_ACS_All_Places_Shapefile.prj
+|        |--2022_ACS_All_Places_Shapefile.shp
+|        |--2022_ACS_All_Places_Shapefile.shx
+|    |-- 2022_ACS_All_Places.csv
+|    |-- 2022_ACS_All_Places.geojson
+|    |-- README.md
 |
 |-- Database/
 |    |-- acsse_2022.db  # SQLite database file containing three tables
@@ -35,9 +56,10 @@ This project automates the process of collecting, processing, and analyzing data
 |      |-- City of Dublin American Community Survey Dictionary.xlsx  # Additional data or documentation File contains all dictionaries and methodology for variables
 |-- Scripts/
 |    |-- acs_data_to_sqlite.py  # Python script to fetch ACS data and save to SQLite
+|    |-- EDA/
+|        |-- contains .ipynb and .py files to start preliminary EDA
 |    |-- Sample/
 |        |-- contains .ipynb, .py, and .r files to show how to connect to acsse2022.db
-
 ```
 
 ## How to Use
