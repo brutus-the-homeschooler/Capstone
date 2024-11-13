@@ -183,28 +183,6 @@ The `place_dictionary`, `state_dictionary` and `variable_dictionary` tables are 
 
 You can view the StoryMap created in ArcGIS [here](https://storymaps.arcgis.com/stories/329f10f1c2064be987c463b079d29b16).
 
-## Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch:
-    ```bash
-    git checkout -b feature-branch
-    ```
-3. Make your changes and commit them:
-    ```bash
-    git commit -am 'Add new feature'
-    ```
-4. Push to the branch:
-    ```bash
-    git push origin feature-branch
-    ```
-5. Create a new Pull Request.
-
-## License
-This project is licensed under the MIT License - see the `LICENSE` file for details.
-
 ## Notes
 - The `acsse_2022.db` SQLite file should be used as the main source of data for analysis.
 - Ensure that all necessary secrets are properly set up in the GitHub repository to allow for successful automation.
