@@ -41,14 +41,14 @@ This project automates the process of collecting, processing, and analyzing data
 |      |-- variables.csv  # List of variables to query from the ACS API WILL BE DEPRECATED
 |      |-- City of Dublin American Community Survey Dictionary.xlsx  # Additional data or documentation File contains all dictionaries and methodology for variables
 |-- Scripts/
-|    |-- acs_data_to_sqlite.py  # Python script to fetch ACS data and save to SQLite
 |    |-- EDA/
-|        |-- contains .ipynb and .py files to start preliminary EDA
+|        |-- contains R file for EDA along with images and an .html report on findings
 |    |-- K-Means/
 |        |-- contains .ipynb and .py files for K-means clustering
 |    |-- Sample/
 |        |-- contains .ipynb, .py, and .r files to show how to connect to acsse2022.db
-|    |-- Workflow Scripts/ # contains scripts needed for .github workflows
+|    |-- Workflow/ 
+|        |-- contains scripts needed for .github workflows
 ```
 
 ## How to Use
