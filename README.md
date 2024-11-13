@@ -44,8 +44,11 @@ This project automates the process of collecting, processing, and analyzing data
 |    |-- acs_data_to_sqlite.py  # Python script to fetch ACS data and save to SQLite
 |    |-- EDA/
 |        |-- contains .ipynb and .py files to start preliminary EDA
+|    |-- K-Means/
+|        |-- contains .ipynb and .py files for K-means clustering
 |    |-- Sample/
 |        |-- contains .ipynb, .py, and .r files to show how to connect to acsse2022.db
+|    |-- Workflow Scripts/ # contains scripts needed for .github workflows
 ```
 
 ## How to Use
