@@ -26,30 +26,21 @@ This project automates the process of collecting, processing, and analyzing data
 |-- ArcGIS/
 |    |-- 2022_ACS All Places/ # Contains shapefiles, geojson and csv for all places within the 2022 American Community 
 |    |-- 2022 ACS Subset/  # Contains shapefiles, geojson and csv for 541 subset based on 19 variables as detailed in StoryMap
-|    |-- README.md
 |
 |-- Database/
 |    |-- acsse_2022.db  # SQLite database file containing three tables
-|    |-- README.md  # Information about the database and its usage
 |
 |-- Dictionary/
 |    |-- Place Dictionary.csv  # Place-related metadata
 |    |-- State Dictionary.csv  # State-related metadata
 |    |-- Variable Dictionary.csv  # Metadata for ACS variables
-|    |-- README.md  # Information about the dictionaries and CSV files
-|    |-- Archive/
-|      |-- variables.csv  # List of variables to query from the ACS API WILL BE DEPRECATED
-|      |-- City of Dublin American Community Survey Dictionary.xlsx  # Additional data or documentation File contains all dictionaries and methodology for variables
+|    |-- Archive/ # Additional historical documentation on variables within American Community Survey
 
 |-- Scripts/
-|    |-- EDA/
-|        |-- contains R file for EDA along with images and an .html report on findings
-|    |-- K-Means/
-|        |-- contains .ipynb and .py files for K-means clustering
-|    |-- Sample/
-|        |-- contains .ipynb, .py, and .r files to show how to connect to acsse2022.db
-|    |-- Workflow/ 
-|        |-- contains scripts needed for .github workflows
+|    |-- EDA/ # contains R file for EDA along with images and an .html report on findings
+|    |-- K-Means/ # contains .ipynb and .py files for K-means clustering
+|    |-- Sample/ # contains .ipynb, .py, and .r files to show how to connect to acsse2022.db
+|    |-- Workflow/ # contains scripts needed for .github workflows
 ```
 
 ## How to Use
