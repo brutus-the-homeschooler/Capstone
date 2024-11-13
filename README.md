@@ -24,28 +24,14 @@ This project automates the process of collecting, processing, and analyzing data
 |         |-- ArcGIS_All_Places.yml  # Workflow file to create ArcGIS shapefiles, geojson, csv for mapping all locations
 |
 |-- ArcGIS/
+|    |-- 2022_ACS All Places/ # Contains shapefiles, geojson and csv for all places within the 2022 American Community 
 |    |-- 2022 ACS Subset/  # Contains shapefiles, geojson and csv for 541 subset based on 19 variables as detailed in StoryMap
-|        |-- 2022 ACS Subset Shapefile/
-|            |-- 2022_ACS_All_Places_Subset.cpg
-|            |-- 2022_ACS_All_Places_Subset.dbf
-|            |-- 2022_ACS_All_Places_Subset.prj
-|            |-- 2022_ACS_All_Places_Subset.shp
-|            |-- 2022_ACS_All_Places_Subset.shx
-|        |-- 2022_ACS_All_Places_Subset.csv
-|        |-- 2022_ACS_All_Places_Subset.geojson
-|    |-- 2022_ACS_All_Places_Shapefile/ # Contains shapefiles, geojson and csv for all places within the 2022 American Community Supplemental Survey
-|        |--2022_ACS_All_Places_Shapefile.cpg
-|        |--2022_ACS_All_Places_Shapefile.dbf
-|        |--2022_ACS_All_Places_Shapefile.prj
-|        |--2022_ACS_All_Places_Shapefile.shp
-|        |--2022_ACS_All_Places_Shapefile.shx
-|    |-- 2022_ACS_All_Places.csv
-|    |-- 2022_ACS_All_Places.geojson
 |    |-- README.md
 |
 |-- Database/
 |    |-- acsse_2022.db  # SQLite database file containing three tables
 |    |-- README.md  # Information about the database and its usage
+|
 |-- Dictionary/
 |    |-- Place Dictionary.csv  # Place-related metadata
 |    |-- State Dictionary.csv  # State-related metadata
