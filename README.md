@@ -40,6 +40,7 @@ This project automates the process of collecting, processing, and analyzing data
 |    |-- Archive/
 |      |-- variables.csv  # List of variables to query from the ACS API WILL BE DEPRECATED
 |      |-- City of Dublin American Community Survey Dictionary.xlsx  # Additional data or documentation File contains all dictionaries and methodology for variables
+
 |-- Scripts/
 |    |-- EDA/
 |        |-- contains R file for EDA along with images and an .html report on findings
