@@ -16,9 +16,9 @@ lapply(required.packages, require, character.only = TRUE) #load specified packag
 ### READ DATA
 ############################################################
 ## Read CSV of variable dictionary
-setwd('/Users/nsepeda/Google Drive/OSU-MastersDataAnalytics/OSU_5911_Capstone1/Data/')
-vardict <- read_csv('CoD_VariableDictionary.csv')
-
+#setwd('/Users/nsepeda/Google Drive/OSU-MastersDataAnalytics/OSU_5911_Capstone1/Data/')
+#vardict <- read_csv('CoD_VariableDictionary.csv')
+vardict <- read_csv('https://raw.githubusercontent.com/brutus-the-homeschooler/Capstone/main/Database/CoD_VariableDictionary.csv')
 ## URL of the .db file hosted on GitHub
 db_url <- "https://raw.githubusercontent.com/brutus-the-homeschooler/Capstone/main/Database/acsse_2022.db"
 
@@ -97,7 +97,7 @@ for (est_col in estimate_cols) {
   
   # Calculate CV
   cv_col <- paste0("CV_", est_col)
-  cv_data[[cv_col]] <- (cod_df[[moe_col]] / cod_df[[est_col]]) * 100
+  cv_data[[cv_col]] <- (abs(cod_df[[moe_col]] / (1.645 * cod_df[[est_col]])) * 100)
 }
 
 # Convert the list of CV columns to a data frame
@@ -153,7 +153,7 @@ census_clean <- census_data_df %>%
 ## Assess Correlations Between Variables
 # Create the correlation matrix
 cor_matrix <- cor(dplyr::select(census_clean, -c('state','place')), 
-                   use = "pairwise.complete.obs")
+                  use = "pairwise.complete.obs")
 
 # Plot correlation matrix
 corrplot(cor_matrix, 
@@ -176,24 +176,24 @@ corrplot(cor_matrix,
 # Add the title using mtext with a negative line value to position closer to the matrix
 mtext("Correlation Matrix of Census Variables", side = 3, line = 2, cex = 1.2)
 dev.off()
-    
+
 # Function to only view the upper triangle of cor matrix
 get_upper_tri <- function(mat) {
   mat[lower.tri(mat)] <- NA
   return(mat)
 }
-    
+
 # Apply the function to the cor matrix
 cor_matrix <- get_upper_tri(cor_matrix)
-    
-    
+
+
 # Filter only high correlations (> 0.75)
 high_cor_matrix <- cor_matrix
 high_cor_matrix[abs(high_cor_matrix) < 0.75] <- NA
-    
+
 high_corr_pairs <- as.data.frame(as.table(cor_matrix)) %>%
-   filter(Var1 != Var2, abs(Freq) > 0.75) %>%
-   arrange(desc(abs(Freq)))
+  filter(Var1 != Var2, abs(Freq) > 0.75) %>%
+  arrange(desc(abs(Freq)))
 colnames(high_corr_pairs) <- c("Variable 1", "Variable 2", "Correlation")
 
 # Format and print the table 
@@ -203,13 +203,13 @@ high_corr_tbl <- formattable(high_corr_pairs, list(
                                           padding = "0 2px"))))
 high_corr_tbl
 
-    
+
 ## Remove Variables that are Highly Correlated
 vars_remove <- c('K200503_002E', 'K200503_003E', 'K200901_002E', 'K201001_003E', 
-                    'K201401_010E', 'K201701_001E', 'K201802_002E', 'K201802_004E',
-                    'K202301_002E', 'K202301_003E', 'K202401_002E', 'K202402_002E', 
-                    'K202501_002E', 'K202508_002E', 'K202701_002E', 'K202701_005E',
-                    'K200701_002E', 'K201902_001E', 'K202510_001E', 'K202511_001E')
+                 'K201401_010E', 'K201701_001E', 'K201802_002E', 'K201802_004E',
+                 'K202301_002E', 'K202301_003E', 'K202401_002E', 'K202402_002E', 
+                 'K202501_002E', 'K202508_002E', 'K202701_002E', 'K202701_005E',
+                 'K200701_002E', 'K201902_001E', 'K202510_001E', 'K202511_001E','K202504_002E')
 
 census_clean <- census_clean %>%
   dplyr::select(!vars_remove)
@@ -271,8 +271,11 @@ for (i in 1:nrow(unique_combinations)) {
     
     # Calculate CV
     cv_col <- paste0("CV_", est_col)
-    cv_data[[cv_col]] <- (temp_df[[moe_col]] / temp_df[[est_col]]) * 100
+    cv_data[[cv_col]] <- (abs(temp_df[[moe_col]] / (1.645 * temp_df[[est_col]])) * 100)
+    #cv_data[[cv_col]] <- (temp_df[[moe_col]] / temp_df[[est_col]]) * 100
   }
+  
+  
   
   # Convert the list of CV columns to a data frame
   cv_df <- as.data.frame(cv_data)
@@ -284,11 +287,13 @@ for (i in 1:nrow(unique_combinations)) {
   meets_threshold <- sapply(estimate_cols, function(est_col) {
     cv_col <- paste0("CV_", est_col)
     if (cv_col %in% colnames(temp_df)) {
-      all(temp_df[[cv_col]] <= cv_threshold, na.rm = TRUE)
+      all(temp_df[[cv_col]] < cv_threshold, na.rm = TRUE)
     } else {
-      TRUE  # If there's no CV column, consider it as meeting the threshold
+      FALSE  # If there's no CV column, consider it as meeting the threshold
     }
   })
+  
+  temp_df <- temp_df[complete.cases(temp_df[, grepl("^CV_", colnames(temp_df))]), ]
   
   # If the combination meets the threshold for all columns, add it to the reliable data list
   if (all(meets_threshold)) {
@@ -306,7 +311,7 @@ cat("Number of cities meeting the CV threshold criteria:", nrow(reliable_census_
 ## Left-join census_clean with reliable_census_df
 census_clean <- reliable_census_all[,1:2] %>%
   left_join(census_clean, by=c('state','place'))
-    
+
 ######################################################################################
 ### CLEAN VARIABLES
 ######################################################################################
@@ -329,7 +334,7 @@ census_clean <- census_clean %>%
          Employed = K202301_004E,
          NotLaborForce = K202301_007E,
          House_OwnerOccupied = K202502_002E,
-         House_1Unit = K202504_002E,
+         #House_1Unit = K202504_002E,
          House_Built80to99 = K202505_004E,
          HealthIns_Covered = K202701_006E)
 
@@ -351,13 +356,13 @@ census_clean$place <- place_dict_df$City.Name[match(census_clean$place, place_di
 census_clean <- census_clean %>%
   mutate(across(where(is.character), as.factor)) #convert char type vars to factor
 
-dict_key_reduced_tbl <- filter(dict_key, !UniqueID %in% vars_remove) %>%
-  mutate(UpdatedID = new_names) %>%
-  relocate(UpdatedID, .after = UniqueID) %>%
-  formattable() %>%
-  print()
+#dict_key_reduced_tbl <- filter(dict_key, !UniqueID %in% vars_remove) %>%
+ # mutate(UpdatedID = new_names) %>%
+  #relocate(UpdatedID, .after = UniqueID) %>%
+  #formattable() %>%
+  #print()
 
-write.csv(census_clean, "CensusData_Clean.csv", row.names = F)
+#write.csv(census_clean, "CensusData_Clean.csv", row.names = F)
 
 
 ######################################################################################
@@ -373,7 +378,7 @@ plot_intro(census_clean) # Plot missing values and basic statistics
 
 # 3. Plot missing data map
 plot_missing(census_clean)
-census_clean <- census_clean %>% dplyr::select(-House_1Unit) #drop House_1Unit due to missingness
+census_clean <- census_clean %>% dplyr::select() #drop House_1Unit due to missingness
 
 # 4. Visualize distributions of individual variables
 plot_histogram(census_clean) # For continuous variables
@@ -413,4 +418,3 @@ dev.off()
 
 
 write.csv(census_clean, 'CensusData_Clean.csv', row.names = F)
-
