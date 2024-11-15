@@ -284,7 +284,7 @@ for (i in 1:nrow(unique_combinations)) {
   meets_threshold <- sapply(estimate_cols, function(est_col) {
     cv_col <- paste0("CV_", est_col)
     if (cv_col %in% colnames(temp_df)) {
-      all(temp_df[[cv_col]] >= cv_threshold, na.rm = TRUE)
+      all(temp_df[[cv_col]] <= cv_threshold, na.rm = TRUE)
     } else {
       TRUE  # If there's no CV column, consider it as meeting the threshold
     }
