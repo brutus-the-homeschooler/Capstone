@@ -340,9 +340,9 @@ plt.show()
 # Drop non-numeric columns
 data_numeric = data_final_2.drop(columns=['place', 'state'])
 
-np.random.seed(142)
+np.random.seed(250)
 k_optimal =6  # Replace with the chosen optimal number of clusters
-kmeans = KMeans(n_clusters=k_optimal, random_state=142)
+kmeans = KMeans(n_clusters=k_optimal, random_state=250)
 
 # Fit and predict clusters
 clusters = kmeans.fit_predict(data_numeric)
@@ -409,8 +409,12 @@ print(counts_by_division_2)
 print("\nCounts by Region:")
 print(counts_by_region_2)
 
+data_numeric
+
 # Only include numeric data
 data_numeric = data_final_2.select_dtypes(include=['number'])
+
+data_numeric = data_numeric.drop(columns=['Cluster'])
 
 # Assuming you have already fitted the k-means model on your data
 centroids = pd.DataFrame(kmeans.cluster_centers_, columns=data_numeric.columns)
@@ -431,10 +435,10 @@ The heatmap of cluster centroids provides key insights into the characteristics 
 data_final_2['Cluster'] = kmeans.labels_
 
 # Filter Cluster 5 data
-cluster_3 = data_final_2[data_final_2['Cluster'] == 5]
+cluster_3 = data_final_2[data_final_2['Cluster'] == 3]
 
 # Get the centroid of Cluster 3
-cluster_3_centroid = kmeans.cluster_centers_[5]  # Replace '3' with the cluster index for Cluster for Dublin
+cluster_3_centroid = kmeans.cluster_centers_[3]  # Replace '3' with the cluster index for Cluster for Dublin
 # Identify the numeric columns used in k-means clustering
 columns_used_in_kmeans = data_numeric.columns  # Replace with the actual column names used in clustering
 
@@ -470,7 +474,7 @@ plt.scatter(
 )
 
 # Customize the plot
-plt.title('Closeness of Places in Cluster 5 to Cluster Centroid (Colored by Region)')
+plt.title('Closeness of Places in Cluster 3 to Cluster Centroid (Colored by Region)')
 plt.xlabel('Distance to Centroid')
 plt.ylabel('Density (horizontal for visualization)')
 plt.legend(title='Region', bbox_to_anchor=(1.05, 1), loc='upper left')
