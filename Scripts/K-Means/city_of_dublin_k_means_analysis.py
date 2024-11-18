@@ -12,6 +12,13 @@ Original file is located at
 import requests
 import sqlite3
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+from scipy.spatial.distance import euclidean
+from sklearn.metrics import silhouette_score
 
 # URL of the .db file hosted on GitHub
 db_url = "https://raw.githubusercontent.com/brutus-the-homeschooler/Capstone/main/Database/acsse_2022.db"
@@ -99,8 +106,6 @@ data = filtered_census_data_df.copy()
 
 """### Scale the data"""
 
-from sklearn.preprocessing import StandardScaler
-
 # Identify columns ending with 'E' for scaling
 columns_to_scale = [col for col in data.columns if col.endswith('E')]
 
@@ -117,9 +122,6 @@ data_final = pd.concat([data_identifiers, data_scaled_df], axis=1)
 
 """### Find optimal # for k"""
 
-from sklearn.cluster import KMeans
-import matplotlib.pyplot as plt
-
 # Define range for number of clusters to test
 K_range = range(1, 30)
 
@@ -134,8 +136,6 @@ plt.title('Elbow Method for Optimal k')
 plt.show()
 
 """We see the elbow starts between 8-12."""
-
-from sklearn.metrics import silhouette_score
 
 # Define range for number of clusters to test
 K_range = range(2, 30)
@@ -285,3 +285,223 @@ print(counts_by_division)
 
 print("\nCounts by Region:")
 print(counts_by_region)
+
+"""### Below is the same k-means clustering based on the survey data where the values are the percentage compared to the total population variable. For example .487 for Male means the population is 48.7% Male."""
+
+# Import the CSV file into a DataFrame
+census_clean_df = pd.read_csv('/content/CensusData_Clean.csv')
+
+# Preview the first few rows of the DataFrame
+#print(census_clean_df.head())
+
+# Identify columns ending with 'E' for scaling
+columns_to_scale_2 = [col for col in census_clean_df.columns if col not in ['place', 'state']]
+
+# Separate the identifier columns ('place' and 'state') and the columns to scale
+data_identifiers_2 = census_clean_df[['place', 'state']]
+data_to_scale_2 = census_clean_df[columns_to_scale_2]
+
+# Scale the data
+scaler = StandardScaler()
+data_scaled_df_2 = pd.DataFrame(scaler.fit_transform(data_to_scale_2), columns=columns_to_scale_2, index=census_clean_df.index)
+
+# Combine scaled columns with the identifiers (place and state)
+data_final_2 = pd.concat([data_identifiers_2, data_scaled_df_2], axis=1)
+
+# Define range for number of clusters to test
+K_range = range(3,17)
+
+# Calculate inertia for each k in the range
+inertia = [KMeans(n_clusters=k, random_state=0).fit(data_scaled_df_2).inertia_ for k in K_range]
+
+# Plot the Elbow Curve
+plt.plot(K_range, inertia, marker='o')
+plt.xlabel('Number of clusters (k)')
+plt.ylabel('Inertia')
+plt.title('Elbow Method for Optimal k')
+plt.show()
+
+# Define range for number of clusters to test
+K_range = range(2, 15)
+
+# Calculate silhouette scores for each k in the range
+silhouette_scores = [
+    silhouette_score(data_scaled_df_2, KMeans(n_clusters=k, random_state=0).fit_predict(data_scaled_df_2))
+    for k in K_range
+]
+
+# Plot silhouette scores
+plt.plot(K_range, silhouette_scores, marker='o')
+plt.xlabel('Number of clusters (k)')
+plt.ylabel('Silhouette Score')
+plt.title('Silhouette Analysis for Optimal k')
+plt.show()
+
+# Drop non-numeric columns
+data_numeric = data_final_2.drop(columns=['place', 'state'])
+
+np.random.seed(142)
+k_optimal =6  # Replace with the chosen optimal number of clusters
+kmeans = KMeans(n_clusters=k_optimal, random_state=142)
+
+# Fit and predict clusters
+clusters = kmeans.fit_predict(data_numeric)
+
+# Add the cluster assignments back to the numeric DataFrame
+data_numeric['Cluster'] = clusters
+
+# Add 'place' and 'state' back to the DataFrame
+data_final_2 = pd.concat([data_final_2[['place', 'state']], data_numeric], axis=1)
+
+# View the final DataFrame with clusters
+print(data_final_2.head())
+
+# Find Dublin's cluster
+Dublin_cluster = data_final_2[(data_final_2['state'] == 'Ohio') &
+                                         (data_final_2['place'] == 'Dublin city')]['Cluster'].values[0]
+print("Cluster for Dublin, Ohio:")
+print(Dublin_cluster)
+
+# Filter for rows where state is 39, which is Ohio
+state_39_clusters = data_final_2[data_final_2['state'] == 'Ohio']
+
+# Count the number of entries in each cluster for state 39
+cluster_counts_state_39 = state_39_clusters['Cluster'].value_counts().sort_index()
+print("\nCluster counts for Ohio:")
+print(cluster_counts_state_39)
+
+# Count the number of entries in each cluster overall
+overall_cluster_counts = data_final_2['Cluster'].value_counts().sort_index()
+print("\nOverall cluster counts:")
+print(overall_cluster_counts)
+
+# Map Division and Region
+data_final_2['Division'] = data_final_2['state'].map(states_to_division)
+data_final_2['Region'] = data_final_2['Division'].map(division_to_region)
+
+# Find Dublin, Ohio cluster
+target_cluster = data_final_2[
+    (data_final_2['state'] == 'Ohio') &
+    (data_final_2['place'] == 'Dublin city')
+]['Cluster'].values[0]
+
+# Filter for rows with the same cluster value
+cluster_subset_2 = data_final_2[data_final_2['Cluster'] == target_cluster]
+
+# Group by State_Name, Region, and Division, and count occurrences
+grouped_counts_2 = {
+    group_by: cluster_subset_2.groupby(group_by).size().reset_index(name='Count')
+    for group_by in ['state', 'Region', 'Division']
+}
+
+# Access individual group count DataFrames
+counts_by_state_2 = grouped_counts_2['state']
+counts_by_region_2 = grouped_counts_2['Region']
+counts_by_division_2 = grouped_counts_2['Division']
+
+# Display the result
+print("Counts by State:")
+print(counts_by_state_2)
+
+print("\nCounts by Division:")
+print(counts_by_division_2)
+
+print("\nCounts by Region:")
+print(counts_by_region_2)
+
+# Only include numeric data
+data_numeric = data_final_2.select_dtypes(include=['number'])
+
+# Assuming you have already fitted the k-means model on your data
+centroids = pd.DataFrame(kmeans.cluster_centers_, columns=data_numeric.columns)
+
+# Heatmap
+plt.figure(figsize=(16, 8))
+sns.heatmap(centroids, annot=True, cmap='coolwarm', xticklabels=data_numeric.columns, yticklabels=[f"Cluster {i}" for i in range(len(centroids))])
+plt.title("Heatmap of Cluster Centroids")
+plt.xlabel("Variables")
+plt.ylabel("Clusters")
+plt.show()
+
+"""
+The heatmap of cluster centroids provides key insights into the characteristics of the variables within each cluster. Cluster 5 stands out with higher values for variables such as House_Built80to99, HealthIns_Covered, and Education_Bachelors, indicating that these features are particularly dominant in this cluster. In contrast, other clusters exhibit lower values for these variables, suggesting different population dynamics or socioeconomic trends. Cluster 5 also shows relatively high proportions of variables like Commute_DriveAlone and Employed, reinforcing its unique profile compared to the others. The visual gradient across the heatmap highlights the variability in each variable's influence on the clusters, with some variables such as PovertyLvl_2andOver and NonVeteran exhibiting consistently lower values across clusters. This variability allows for clear distinctions between clusters and helps in understanding the dominant traits that define Cluster 5 compared to the rest."""
+
+# `kmeans.cluster_centers_` contains the centroids
+# Add 'Cluster' column to the dataset if it's not already there
+data_final_2['Cluster'] = kmeans.labels_
+
+# Filter Cluster 5 data
+cluster_3 = data_final_2[data_final_2['Cluster'] == 5]
+
+# Get the centroid of Cluster 3
+cluster_3_centroid = kmeans.cluster_centers_[5]  # Replace '3' with the cluster index for Cluster for Dublin
+# Identify the numeric columns used in k-means clustering
+columns_used_in_kmeans = data_numeric.columns  # Replace with the actual column names used in clustering
+
+# Calculate Euclidean distance to the centroid for each point in Cluster 3
+cluster_3['Distance_to_Centroid'] = cluster_3[columns_used_in_kmeans].apply(
+    lambda row: euclidean(row, cluster_3_centroid),
+    axis=1
+)
+
+# Check if Dublin City, OH is in Cluster 3
+dublin_row = cluster_3[(cluster_3['place'] == 'Dublin city') & (cluster_3['state'] == 'Ohio')]
+
+# Scatterplot for Cluster 5, colored by Region
+plt.figure(figsize=(12, 6))
+
+# Scatterplot with colors based on the 'Region' column
+sns.scatterplot(
+    x=cluster_3['Distance_to_Centroid'],
+    y=[0] * len(cluster_3),  # Keep points horizontally aligned for clarity
+    hue=cluster_3['Region'],  # Color by Region
+    palette='tab10',          # Use a distinct color palette
+    s=100                     # Size of points
+)
+
+# Highlight Dublin City, OH
+plt.scatter(
+    dublin_row['Distance_to_Centroid'],
+    [0],
+    color='red',
+    marker='*',
+    s=300,
+    label='Dublin City, OH'
+)
+
+# Customize the plot
+plt.title('Closeness of Places in Cluster 5 to Cluster Centroid (Colored by Region)')
+plt.xlabel('Distance to Centroid')
+plt.ylabel('Density (horizontal for visualization)')
+plt.legend(title='Region', bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.show()
+
+"""Dublin City, OH (marked by the red star) is positioned relatively close to the centroid of Cluster 5, making it a strong representative of the cluster's overall characteristics. Its location on the lower end of the distance spectrum suggests that it is central to the cluster in terms of feature similarity. The points in the scatterplot are spread along the X-axis, which represents their Euclidean distances to the centroid; smaller distances indicate a closer alignment with the core features of Cluster 5. The Y-axis, meanwhile, serves purely for visual separation. Most places in Cluster 5 are grouped between distances of approximately 2 and 4, indicating a relatively compact cluster with a clear core, though there are a few outliers beyond a distance of 6. These outliers differ more significantly from the centroid and may not share as many characteristics with Dublin City or other central members of the cluster.
+
+### Comparison between the two methods
+"""
+
+print("Counts by Region (Using raw values):")
+print(counts_by_region)
+
+print("\nCounts by Region (using percentages):")
+print(counts_by_region_2)
+
+"""Both methods highlight a strong reliance on the West and South regions, followed by the Midwest. Notably, Dublin, Ohio, is located in the Midwest region. This raises interesting questions about how potential sister cities could be concentrated in the South or West regions rather than within the same geographical area. The relatively high counts in the South and West suggest that cities in these regions may share similar socioeconomic or demographic characteristics with Dublin, Ohio, despite being geographically distant.
+
+Paired with the earlier proximity-to-centroid visual analysis, this lends further support to examining the unique variables that position certain cities as closer matches to Dublin within the cluster. It also emphasizes the importance of expanding the analysis to include region-specific trends, such as population density, economic indicators, or cultural factors, that might influence cluster placement. This insight opens up opportunities to refine the analysis by incorporating additional regional variables or weighting certain features to better reflect Dublin's specific profile.
+
+By combining the cluster proximity data with these regional distributions, the analysis gains a multidimensional perspective, helping narrow down potential sister cities while uncovering the broader relationships between regions and their shared attributes with Dublin, Ohio. This layered approach could significantly aid in making more informed decisions about which cities best align with Dublin's characteristics and priorities.
+"""
+
+print("Counts by Division (Using raw values):")
+print(counts_by_division)
+print("\nCounts by Division (using percentages):")
+print(counts_by_division_2)
+
+"""The division-level analysis closely mirrors the trends observed at the region level, with divisions like the Pacific, South Atlantic, and West South Central standing out in the upper bands. Interestingly, the East North Central division, which includes Ohio (and therefore Dublin), also ranks prominently, suggesting potential sister cities may exist both within Dublin's immediate geographic area and beyond.
+
+The presence of divisions like Pacific and South Atlantic in the upper band indicates that cities in these divisions may share characteristics with Dublin despite being geographically distant. This underscores the value of exploring similarities beyond immediate proximity, such as economic indicators, demographic patterns, or cultural traits.
+
+While the analysis reveals strong possibilities within the East North Central division—aligning with the expected regional proximity of Dublin—this is balanced by notable representation from divisions in the South and West. This further validates the need for a holistic approach that combines geographic proximity with clustering variables to identify sister cities that align with Dublin’s unique attributes.
+"""
